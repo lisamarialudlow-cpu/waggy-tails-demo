@@ -1,0 +1,570 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Waggy Tails | Dog Daycare</title>
+<style>
+:root {
+  --green:#287665;
+  --dark:#24453c;
+  --mint:#e1f3e7;
+  --cream:#fffaf0;
+  --peach:#ffe3ca;
+  --pink:#ffe9ef;
+  --line:#e8e4da;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  background:var(--cream);
+  color:var(--dark);
+  font-family:system-ui,Arial,sans-serif;
+}
+header {
+  background:linear-gradient(120deg,#cceee0,#ffdfc6);
+  padding:30px 16px;
+  text-align:center;
+}
+.logo { font-size:48px; }
+h1 { margin:5px 0; font-size:clamp(28px,5vw,42px); }
+h2 { margin-top:0; }
+.subtitle { margin:8px 0; }
+.container { max-width:1100px; margin:auto; padding:16px; }
+.sample {
+  display:inline-block;
+  background:#fff0b9;
+  padding:9px 15px;
+  border-radius:25px;
+  font-size:13px;
+  font-weight:bold;
+  margin:10px 0;
+}
+nav {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin:15px 0 22px;
+}
+button {
+  border:0;
+  border-radius:15px;
+  padding:12px 16px;
+  min-height:49px;
+  font:inherit;
+  font-weight:700;
+  cursor:pointer;
+}
+nav button { background:#e5efdf; color:var(--dark); }
+nav button.active { background:var(--green); color:white; }
+.primary { background:var(--green); color:white; }
+.secondary { background:var(--peach); color:var(--dark); }
+.card {
+  background:white;
+  padding:20px;
+  margin:15px 0;
+  border-radius:22px;
+  border:1px solid var(--line);
+  box-shadow:0 5px 18px #384f3710;
+}
+.intro { background:#fff1e3; }
+.grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(145px,1fr));
+  gap:12px;
+}
+.day {
+  background:#eff9f2;
+  border:2px solid #d2e9d9;
+  border-radius:17px;
+  padding:14px;
+}
+.day.full { background:#fff0ef; border-color:#f5b6b6; }
+.day strong { display:block; }
+.number { font-size:29px; font-weight:800; color:var(--green); }
+.day.full .number { color:#ae3030; }
+.fields {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:12px;
+  margin:15px 0;
+}
+label { font-weight:700; display:block; }
+input,select {
+  display:block;
+  width:100%;
+  padding:12px;
+  margin-top:7px;
+  min-height:48px;
+  border:1px solid #bdd5c6;
+  border-radius:12px;
+  font:inherit;
+  background:white;
+}
+.dogs {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:13px;
+}
+.dog-card {
+  background:#fffdf8;
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:17px;
+}
+.dog-card h3 { margin:0 0 10px; }
+.tag {
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:30px;
+  font-size:13px;
+  font-weight:700;
+}
+.green { background:#dbf3e0; color:#246039; }
+.amber { background:#fff0b0; color:#805600; }
+.red { background:#ffe0df; color:#a12626; }
+.actions { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.actions button { background:var(--mint); }
+button:disabled { opacity:.45; cursor:not-allowed; }
+.hidden { display:none; }
+.notice {
+  background:var(--mint);
+  border-radius:12px;
+  padding:13px;
+  margin-top:12px;
+}
+.error { background:#ffe4e1; }
+.booking-row {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  padding:12px 0;
+  border-bottom:1px solid var(--line);
+  flex-wrap:wrap;
+}
+.booking-row button { background:var(--peach); min-height:40px; }
+.small { font-size:14px; color:#64746b; }
+.owner-update { background:var(--pink); padding:17px; border-radius:18px; }
+footer { text-align:center; padding:25px; color:#64746b; }
+@media(max-width:480px) {
+  .card { padding:15px; }
+  nav button { font-size:14px; padding:10px 5px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">🐶 🐾</div>
+  <h1>Waggy Tails</h1>
+  <p class="subtitle">Happy dogs. Happy owners. Happy tails!</p>
+  <p>Dog Daycare · Lucan, Co. Dublin</p>
+</header>
+
+<main class="container">
+  <span class="sample">🐾 FICTIONAL SAMPLE DATA — DEMO ONLY</span>
+
+  <nav>
+    <button class="active" data-tab="bookings">📅 Bookings</button>
+    <button data-tab="today">🐕 Today</button>
+    <button data-tab="pupdate">💌 Pupdate</button>
+  </nav>
+
+  <section id="bookings">
+    <div class="card intro">
+      <h2>🐾 Welcome to the pack!</h2>
+      <p>Keep every dog safe, every booking organised and every tail wagging.</p>
+    </div>
+
+    <div class="card">
+      <h2>📅 Weekly availability</h2>
+      <p class="small">40 places maximum per day. Red means fully booked.</p>
+      <div id="week" class="grid"></div>
+    </div>
+
+    <div class="card">
+      <h2>🦴 Book a doggy day</h2>
+      <div class="fields">
+        <label>Choose a dog
+          <select id="bookDog"></select>
+        </label>
+        <label>Choose a date
+          <input type="date" id="bookDate">
+        </label>
+      </div>
+      <button class="primary" id="bookBtn">🐾 Confirm booking</button>
+      <div id="bookMessage" role="status"></div>
+    </div>
+
+    <div class="card">
+      <h2>📋 Bookings register</h2>
+      <div id="bookList"></div>
+    </div>
+  </section>
+
+  <section id="today" class="hidden">
+    <div class="card intro">
+      <h2>🐕 Today's happy pack</h2>
+      <p>Check in dogs and record their activities with one tap.</p>
+      <p class="small">Expired vaccinations block check-in.</p>
+    </div>
+    <div class="card">
+      <h2>🐾 Dogs attending today</h2>
+      <p id="todayCount"></p>
+      <div id="todayDogs" class="dogs"></div>
+    </div>
+  </section>
+
+  <section id="pupdate" class="hidden">
+    <div class="card intro">
+      <h2>💌 A little Pupdate!</h2>
+      <p>Give dog owners a peek at their furry friend's day.</p>
+    </div>
+    <div class="card">
+      <h2>🐶 Find your dog's updates</h2>
+      <p class="small">Enter the dog's name and fictional owner code.
+      This is a demonstration, not a secure customer login.</p>
+      <div class="fields">
+        <label>Dog's name
+          <input id="ownerDog" placeholder="e.g. Bailey">
+        </label>
+        <label>Demo owner code
+          <input id="ownerCode" placeholder="e.g. PAW101">
+        </label>
+      </div>
+      <button class="primary" id="viewPupdate">💚 See my Pupdate</button>
+      <div id="ownerResult" role="status"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  🐾 Made with love for Waggy Tails 🐾
+  <p class="small">Student alpha prototype · No real customer data</p>
+</footer>
+
+<script>
+(() => {
+"use strict";
+
+const KEY = "waggy-tails-friendly-v1";
+const LIMIT = 40;
+const $ = id => document.getElementById(id);
+
+function iso(d) {
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")
+    +"-"+String(d.getDate()).padStart(2,"0");
+}
+function toDate(s) { return new Date(s+"T12:00:00"); }
+function addDays(s,n) {
+  const d=toDate(s);
+  d.setDate(d.getDate()+n);
+  return iso(d);
+}
+const today=iso(new Date());
+function monday() {
+  const d=toDate(today);
+  d.setDate(d.getDate()-(d.getDay()+6)%7);
+  return iso(d);
+}
+function format(s) {
+  return toDate(s).toLocaleDateString("en-IE",{
+    weekday:"short",day:"numeric",month:"short"
+  });
+}
+function safe(s) {
+  return String(s).replace(/[&<>"']/g,c=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",
+    '"':"&quot;","'":"&#39;"
+  })[c]);
+}
+
+const sampleDogs=[
+  ["Bailey","Aoife","PAW101",120],
+  ["Milo","Conor","PAW102",8],
+  ["Luna","Sarah","PAW103",-2],
+  ["Teddy","Niamh","PAW104",70],
+  ["Bella","Mark","PAW105",11],
+  ["Archie","Orla","PAW106",45],
+  ["Rosie","Daniel","PAW107",95],
+  ["Cooper","Emma","PAW108",24],
+  ["Daisy","Ava","PAW109",60],
+  ["Finn","Jack","PAW110",90]
+].map((x,i)=>({
+  id:"d"+(i+1),name:x[0],owner:x[1],
+  code:x[2],vacc:addDays(today,x[3])
+}));
+
+// A full Friday makes the capacity warning easy to test.
+const nextFriday=(()=>{
+  const d=toDate(today);
+  const shift=(5-d.getDay()+7)%7;
+  return addDays(today,shift);
+})();
+
+function initialState() {
+  const dogs=[...sampleDogs];
+  const bookings=[
+    {dog:"d1",date:today},
+    {dog:"d2",date:today},
+    {dog:"d3",date:today},
+    {dog:"d4",date:today},
+    {dog:"d5",date:today},
+    {dog:"d6",date:addDays(today,1)},
+    {dog:"d7",date:addDays(today,2)},
+    {dog:"d8",date:addDays(today,3)}
+  ];
+
+  // Additional fictional dogs fill the demonstration Friday.
+  for(let i=1;i<=40;i++) {
+    const id="f"+i;
+    dogs.push({
+      id:id,
+      name:"Demo Pup "+i,
+      owner:"Sample Owner "+i,
+      code:"DEMO"+String(i).padStart(3,"0"),
+      vacc:addDays(today,180)
+    });
+    bookings.push({dog:id,date:nextFriday});
+  }
+  return {dogs,bookings,checkins:{},notes:{}};
+}
+
+let state;
+try {
+  state=JSON.parse(localStorage.getItem(KEY));
+  if(!state || !Array.isArray(state.dogs) ||
+     !Array.isArray(state.bookings)) throw Error();
+} catch(e) { state=initialState(); }
+state.checkins ||= {};
+state.notes ||= {};
+
+function save() {
+  localStorage.setItem(KEY,JSON.stringify(state));
+}
+save();
+
+function dog(id) { return state.dogs.find(d=>d.id===id); }
+function count(date) {
+  return state.bookings.filter(b=>b.date===date).length;
+}
+function vaccination(d,date) {
+  if(d.vacc<date) return "expired";
+  const days=Math.round((toDate(d.vacc)-toDate(date))/86400000);
+  return days<=14 ? "amber" : "valid";
+}
+function badge(d,date) {
+  const s=vaccination(d,date);
+  const cls=s==="expired"?"red":s==="amber"?"amber":"green";
+  const txt=s==="expired"?"⛔ Expired vaccination":
+    s==="amber"?"⚠️ Expires within 14 days":"✅ Vaccination valid";
+  return '<span class="tag '+cls+'">'+txt+'</span>';
+}
+function message(text,error=false) {
+  $("bookMessage").innerHTML='<div class="notice '+
+    (error?"error":"")+'">'+safe(text)+'</div>';
+}
+
+function nearestDate(date,d) {
+  for(let i=1;i<=30;i++) {
+    for(const offset of [-i,i]) {
+      const candidate=addDays(date,offset);
+      if(candidate<today) continue;
+      if(count(candidate)>=LIMIT) continue;
+      if(vaccination(d,candidate)==="expired") continue;
+      if(state.bookings.some(b=>b.dog===d.id && b.date===candidate))
+        continue;
+      return candidate;
+    }
+  }
+  return null;
+}
+
+function renderBookings() {
+  let html="";
+  for(let i=0;i<7;i++) {
+    const date=addDays(monday(),i);
+    const booked=count(date), left=Math.max(0,LIMIT-booked);
+    html+='<div class="day '+(left===0?"full":"")+'">'+
+      '<strong>'+format(date)+'</strong>'+
+      '<div class="number">'+(left===0?"FULL":left)+'</div>'+
+      '<small>'+booked+' / 40 booked</small></div>';
+  }
+  $("week").innerHTML=html;
+
+  $("bookDog").innerHTML=state.dogs.map(d=>
+    '<option value="'+safe(d.id)+'">'+safe(d.name)+'</option>'
+  ).join("");
+
+  $("bookList").innerHTML=state.bookings
+    .slice().sort((a,b)=>a.date.localeCompare(b.date))
+    .map(b=>{
+      const d=dog(b.dog);
+      if(!d) return "";
+      return '<div class="booking-row"><div>🐾 <b>'+
+        safe(d.name)+'</b> — '+format(b.date)+
+        '<div>'+badge(d,b.date)+'</div></div>'+
+        '<button data-remove="'+safe(d.id)+
+        '" data-date="'+b.date+'">Remove</button></div>';
+    }).join("") || "<p>No bookings.</p>";
+}
+
+function book() {
+  const d=dog($("bookDog").value);
+  const date=$("bookDate").value;
+  if(!d||!date) return message("Select a dog and a date.",true);
+  if(date<today) return message("Past dates cannot be booked.",true);
+
+  if(state.bookings.some(b=>b.dog===d.id && b.date===date))
+    return message(d.name+" already has a booking for that day.",true);
+
+  if(vaccination(d,date)==="expired")
+    return message(d.name+
+      " cannot be booked because the vaccination is expired.",true);
+
+  if(count(date)>=LIMIT) {
+    const next=nearestDate(date,d);
+    message("That day is full! "+
+      (next?"Nearest available day: "+format(next)+
+      ". Choose that date to continue.":"No alternative found."),true);
+    return;
+  }
+  state.bookings.push({dog:d.id,date});
+  save();
+  renderBookings();
+  renderToday();
+  message("🐾 "+d.name+" is booked for "+format(date)+"!");
+}
+
+function renderToday() {
+  const bookings=state.bookings.filter(b=>b.date===today);
+  const checked=bookings.filter(b=>state.checkins[b.dog+"|"+today]);
+  $("todayCount").textContent=bookings.length+
+    " booked · "+checked.length+" checked in";
+
+  $("todayDogs").innerHTML=bookings.map(b=>{
+    const d=dog(b.dog);
+    if(!d) return "";
+    const k=d.id+"|"+today;
+    const inDay=!!state.checkins[k];
+    const expired=vaccination(d,today)==="expired";
+    const notes=state.notes[k]||[];
+
+    return '<article class="dog-card">'+
+      '<h3>🐶 '+safe(d.name)+'</h3>'+
+      badge(d,today)+
+      '<p>'+(inDay?"✅ Checked in":"Waiting for check-in")+'</p>'+
+      '<button class="primary" data-check="'+safe(d.id)+'" '+
+      (expired?"disabled":"")+'>'+
+      (expired?"⛔ Check-in blocked":
+        inDay?"Undo check-in":"🐾 Check in")+'</button>'+
+      '<p class="small">Tap an activity to add a note:</p>'+
+      '<div class="actions">'+
+      [["Ate","🍽️"],["Walked","🦮"],["Played","🎾"],["Napped","💤"]]
+        .map(a=>'<button data-note="'+safe(d.id)+
+        '" data-activity="'+a[0]+'" '+(!inDay?"disabled":"")+
+        '>'+a[1]+" "+a[0]+'</button>').join("")+
+      '</div><p class="small">'+
+      (notes.length?notes.map(n=>safe(n.activity)).join(" · "):
+        "No activities recorded yet.")+
+      '</p></article>';
+  }).join("") || "<p>No dogs booked for today.</p>";
+}
+
+function showPupdate() {
+  const name=$("ownerDog").value.trim().toLowerCase();
+  const code=$("ownerCode").value.trim().toUpperCase();
+  const d=state.dogs.find(x=>
+    x.name.toLowerCase()===name && x.code===code
+  );
+
+  if(!d) {
+    $("ownerResult").innerHTML=
+      '<div class="notice error">Details not found. Check the dog name and owner code.</div>';
+    return;
+  }
+  const k=d.id+"|"+today;
+  const notes=state.notes[k]||[];
+  const booked=state.bookings.some(b=>
+    b.dog===d.id && b.date===today
+  );
+
+  $("ownerResult").innerHTML=
+    '<div class="owner-update" style="margin-top:15px">'+
+    '<h3>💌 '+safe(d.name)+"'s Pupdate</h3>"+
+    '<p>📅 '+format(today)+'</p>'+
+    '<p>'+(booked?(state.checkins[k]?
+      "🐾 Checked in and enjoying daycare!":
+      "Booked today — awaiting check-in."):
+      "Not attending daycare today.")+'</p>'+
+    '<h4>Today\'s adventures</h4>'+
+    (notes.length?'<ul>'+notes.map(n=>
+      '<li>'+safe(n.activity)+' at '+safe(n.time)+'</li>'
+    ).join("")+'</ul>':
+      "<p>No activity updates yet. Check back later!</p>")+
+    '</div>';
+}
+
+document.querySelectorAll("nav button").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll("nav button").forEach(x=>
+      x.classList.toggle("active",x===btn)
+    );
+    ["bookings","today","pupdate"].forEach(id=>
+      $(id).classList.toggle("hidden",id!==btn.dataset.tab)
+    );
+    if(btn.dataset.tab==="today") renderToday();
+  });
+});
+
+$("bookBtn").addEventListener("click",book);
+$("viewPupdate").addEventListener("click",showPupdate);
+
+$("bookList").addEventListener("click",e=>{
+  const btn=e.target.closest("[data-remove]");
+  if(!btn) return;
+  const id=btn.dataset.remove,date=btn.dataset.date;
+  state.bookings=state.bookings.filter(b=>
+    !(b.dog===id && b.date===date)
+  );
+  delete state.checkins[id+"|"+date];
+  delete state.notes[id+"|"+date];
+  save();
+  renderBookings();
+  renderToday();
+  message("Booking removed. Available spaces updated.");
+});
+
+$("todayDogs").addEventListener("click",e=>{
+  const btn=e.target.closest("button");
+  if(!btn) return;
+
+  if(btn.dataset.check) {
+    const id=btn.dataset.check,k=id+"|"+today;
+    if(vaccination(dog(id),today)==="expired") return;
+    state.checkins[k]=!state.checkins[k];
+    if(!state.checkins[k]) delete state.notes[k];
+  } else if(btn.dataset.note) {
+    const k=btn.dataset.note+"|"+today;
+    if(!state.checkins[k]) return;
+    (state.notes[k] ||= []).push({
+      activity:btn.dataset.activity,
+      time:new Date().toLocaleTimeString("en-IE",{
+        hour:"2-digit",minute:"2-digit"
+      })
+    });
+  }
+  save();
+  renderToday();
+});
+
+$("bookDate").value=today;
+$("bookDate").min=today;
+renderBookings();
+renderToday();
+})();
+</script>
+</body>
+</html>
